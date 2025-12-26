@@ -11,39 +11,51 @@ import { ProductDetail } from './components/ProductDetail';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewType>('shop');
-  const [products, setProducts] = useState<Product[]>([]);
-  const [leads, setLeads] = useState<OrderLead[]>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  
+  const [products, setProducts] = useState<Product[]>(() => {
+    const saved = localStorage.getItem('fireworks_products_v3');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { return INITIAL_PRODUCTS; }
+    }
+    return INITIAL_PRODUCTS;
+  });
+
+  const [leads, setLeads] = useState<OrderLead[]>(() => {
+    const saved = localStorage.getItem('fireworks_leads_v3');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { return []; }
+    }
+    return [];
+  });
+
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    const saved = localStorage.getItem('fireworks_cart_v3');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { return []; }
+    }
+    return [];
+  });
+
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    return sessionStorage.getItem('fireworks_auth_v3') === 'true';
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('全部');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isCheckoutFormOpen, setIsCheckoutFormOpen] = useState(false);
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
 
-  useEffect(() => {
-    try {
-      const savedProducts = localStorage.getItem('fireworks_products_v3');
-      const savedLeads = localStorage.getItem('fireworks_leads_v3');
-      const savedCart = localStorage.getItem('fireworks_cart_v3');
-      const savedAuth = sessionStorage.getItem('fireworks_auth_v3');
-      if (savedProducts) setProducts(JSON.parse(savedProducts));
-      else {
-        setProducts(INITIAL_PRODUCTS);
-        localStorage.setItem('fireworks_products_v3', JSON.stringify(INITIAL_PRODUCTS));
-      }
-      if (savedLeads) setLeads(JSON.parse(savedLeads));
-      if (savedCart) setCart(JSON.parse(savedCart));
-      if (savedAuth === 'true') setIsAdminAuthenticated(true);
-    } catch (e) { console.error("Storage Error", e); }
-  }, []);
-
-  useEffect(() => { if (products.length > 0) localStorage.setItem('fireworks_products_v3', JSON.stringify(products)); }, [products]);
+  useEffect(() => { localStorage.setItem('fireworks_products_v3', JSON.stringify(products)); }, [products]);
   useEffect(() => { localStorage.setItem('fireworks_leads_v3', JSON.stringify(leads)); }, [leads]);
   useEffect(() => { localStorage.setItem('fireworks_cart_v3', JSON.stringify(cart)); }, [cart]);
 
   const categories = useMemo(() => ['全部', ...Array.from(new Set(products.map(p => p.category)))], [products]);
-  const showToast = useCallback((message: string) => { setToast({ message, type: 'success' }); setTimeout(() => setToast(null), 3000); }, []);
+  
+  const showToast = useCallback((message: string) => { 
+    setToast({ message, type: 'success' }); 
+    setTimeout(() => setToast(null), 3000); 
+  }, []);
 
   const filteredProducts = useMemo(() => products.filter(p => {
     const mSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -71,10 +83,10 @@ const App: React.FC = () => {
       <header className="w-full bg-white border-b border-slate-100/50">
         <div className="max-w-7xl mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer group" onClick={() => setView('shop')} title="回到商城首页">
-            <div className="w-9 h-9 bg-orange-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-orange-100">花</div>
+            <div className="w-9 h-9 bg-orange-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-orange-100">富</div>
             <div className="flex flex-col">
-              <span className="text-base font-black text-slate-900 leading-none">全球花炮集合</span>
-              <span className="text-[8px] font-black text-orange-600 tracking-tighter uppercase mt-0.5 opacity-80">binbinaidapao selection</span>
+              <span className="text-base font-black text-slate-900 leading-none">富贵的快乐小屋</span>
+              <span className="text-[8px] font-black text-orange-600 tracking-tighter uppercase mt-0.5 opacity-80">Fugui's Happy Selection</span>
             </div>
           </div>
           <div className="text-[10px] font-black text-slate-300 uppercase tracking-widest hidden sm:block">Professional Fireworks Order System</div>
@@ -82,11 +94,9 @@ const App: React.FC = () => {
       </header>
 
       <main className="flex-grow">
-        {/* 全局交互栏：搜索 + 核心导航 */}
         <div className="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
-              {/* 搜索框区 */}
               <div className="relative flex-grow group">
                 <input 
                   className="w-full pl-12 pr-6 py-4 rounded-2xl border border-slate-200 bg-slate-50 shadow-inner outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 font-bold transition-all text-sm sm:text-base placeholder:text-slate-400"
@@ -100,7 +110,6 @@ const App: React.FC = () => {
                 </div>
               </div>
               
-              {/* 汉字标注导航按钮组 */}
               <div className="flex gap-2 sm:gap-3 overflow-x-auto scrollbar-hide">
                 {navButtons.map(btn => (
                   <button 
@@ -125,7 +134,6 @@ const App: React.FC = () => {
 
         {view === 'shop' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 animate-in fade-in duration-500">
-            {/* 分类过滤栏 */}
             <div className="flex gap-2 overflow-x-auto pb-6 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
               {categories.map(cat => (
                 <button 
@@ -169,13 +177,28 @@ const App: React.FC = () => {
                 const text = `客户：${lead.customerName}\n手机：${lead.phone}\n微信：${lead.wechat}\n预订：${lead.items.map(i => i.product.name + 'x' + i.quantity).join(', ')}`;
                 navigator.clipboard.writeText(text); showToast('已成功复制订单详情');
               }} 
-              onAddProduct={p => setProducts(v => [{...p, id: 'P'+Date.now().toString().slice(-5), createdAt: Date.now()}, ...v])} 
-              onDeleteProduct={id => setProducts(v => v.filter(p => p.id !== id))} onClearLeads={() => setLeads([])}
+              onAddProduct={p => {
+                setProducts(v => [{...p, id: 'P'+Date.now().toString().slice(-5), createdAt: Date.now()}, ...v]);
+                showToast('产品已上架');
+              }} 
+              onUpdateProduct={updated => {
+                setProducts(v => v.map(p => p.id === updated.id ? updated : p));
+                showToast('保存修改成功');
+              }}
+              onDeleteProduct={id => {
+                setProducts(v => v.filter(p => p.id !== id));
+                showToast('产品已下架');
+              }}
+              onClearLeads={() => { setLeads([]); showToast('记录已清空'); }}
               onUpdateLeadStatus={(id, s) => setLeads(v => v.map(l => l.id === id ? {...l, status: s} : l))}
             />
           ) : (
             <AdminLogin onLogin={(u, p) => {
-              if(u === 'admin' && p === 'admin123') { setIsAdminAuthenticated(true); sessionStorage.setItem('fireworks_auth_v3', 'true'); return true; }
+              if(u === 'admin' && p === 'admin123') { 
+                setIsAdminAuthenticated(true); 
+                sessionStorage.setItem('fireworks_auth_v3', 'true'); 
+                return true; 
+              }
               return false;
             }} />
           )

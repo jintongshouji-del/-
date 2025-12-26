@@ -13,18 +13,12 @@ export const ProductDetail: React.FC<{ product: Product, onClose: () => void, on
           <Icons.Close />
         </button>
         
-        {/* 图片画廊区 - 移动端固定高度 */}
         <div className="w-full lg:w-3/5 bg-slate-100 relative group aspect-square sm:aspect-video lg:aspect-auto h-[40vh] sm:h-auto overflow-hidden">
           <img src={product.images[activeIdx]} className="w-full h-full object-cover transition-opacity duration-500" alt={product.name} />
-          
           {product.images.length > 1 && (
             <>
-              <button onClick={() => setActiveIdx(v => (v - 1 + product.images.length) % product.images.length)} className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 text-white rounded-full hover:bg-white/40 sm:opacity-0 group-hover:opacity-100 transition-all active:scale-90">
-                <Icons.ChevronLeft />
-              </button>
-              <button onClick={() => setActiveIdx(v => (v + 1) % product.images.length)} className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 text-white rounded-full hover:bg-white/40 sm:opacity-0 group-hover:opacity-100 transition-all active:scale-90">
-                <Icons.ChevronRight />
-              </button>
+              <button onClick={() => setActiveIdx(v => (v - 1 + product.images.length) % product.images.length)} className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 text-white rounded-full hover:bg-white/40 sm:opacity-0 group-hover:opacity-100 transition-all active:scale-90"><Icons.ChevronLeft /></button>
+              <button onClick={() => setActiveIdx(v => (v + 1) % product.images.length)} className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 text-white rounded-full hover:bg-white/40 sm:opacity-0 group-hover:opacity-100 transition-all active:scale-90"><Icons.ChevronRight /></button>
               <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 px-4 scrollbar-hide overflow-x-auto">
                 {product.images.map((_, idx) => (
                   <button key={idx} onClick={() => setActiveIdx(idx)} className={`h-1 rounded-full transition-all ${activeIdx === idx ? 'w-8 bg-orange-600' : 'w-2 bg-white/60'}`} />
@@ -34,7 +28,6 @@ export const ProductDetail: React.FC<{ product: Product, onClose: () => void, on
           )}
         </div>
 
-        {/* 详情内容区 - 移动端支持内容滚动 */}
         <div className="w-full lg:w-2/5 p-6 sm:p-12 flex flex-col bg-white overflow-y-auto">
           <div className="mb-6 sm:mb-8">
             <span className="px-2.5 py-1 bg-orange-50 text-orange-600 text-[10px] sm:text-xs font-black rounded-lg uppercase tracking-widest border border-orange-100">
@@ -49,14 +42,11 @@ export const ProductDetail: React.FC<{ product: Product, onClose: () => void, on
               <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">产品详情</h4>
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium">{product.description}</p>
             </div>
-            
             <div className="space-y-3">
               <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">核心属性</h4>
               <div className="flex flex-wrap gap-2">
                 {product.attributes.map(attr => (
-                  <span key={attr} className="px-3 py-1.5 bg-slate-50 border border-slate-100 text-slate-500 rounded-xl text-[11px] sm:text-xs font-bold whitespace-nowrap">
-                    {attr}
-                  </span>
+                  <span key={attr} className="px-3 py-1.5 bg-slate-50 border border-slate-100 text-slate-500 rounded-xl text-[11px] sm:text-xs font-bold">{attr}</span>
                 ))}
               </div>
             </div>
@@ -64,9 +54,9 @@ export const ProductDetail: React.FC<{ product: Product, onClose: () => void, on
 
           <div className="mt-8 sm:mt-12 sticky bottom-0 bg-white pt-4 pb-6 sm:pb-0">
             <button onClick={() => { onAddToCart(product); onClose(); }} className="w-full bg-orange-600 text-white py-4 sm:py-5 rounded-2xl sm:rounded-3xl font-black text-lg sm:text-xl shadow-2xl shadow-orange-100 active:scale-95 hover:bg-orange-700 transition-all flex items-center justify-center gap-3">
-              <Icons.Cart />立即添加到预订
+              <Icons.Cart />添加到预订清单
             </button>
-            <p className="text-center text-slate-300 text-[9px] font-bold mt-4 tracking-widest uppercase">Premium Fireworks by binbinaidapao</p>
+            <p className="text-center text-slate-300 text-[9px] font-bold mt-4 tracking-widest uppercase">Premium Selection by 富贵 (Fugui)</p>
           </div>
         </div>
       </div>
