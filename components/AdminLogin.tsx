@@ -8,16 +8,17 @@ export const AdminLogin: React.FC<{ onLogin: (u: string, p: string) => boolean }
   const [err, setErr] = useState(false);
   return (
     <div className="max-w-md mx-auto py-24 px-4">
-      <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-xl">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4"><Icons.Lock /></div>
-          <h2 className="text-2xl font-bold">管理后台</h2>
+      <div className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-2xl animate-in fade-in slide-in-from-bottom-4">
+        <div className="text-center mb-10">
+          <div className="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm"><Icons.Lock /></div>
+          <h2 className="text-2xl font-black text-slate-900">管理员登录</h2>
+          <p className="text-xs text-slate-400 mt-2 font-bold tracking-widest uppercase">binbinaidapao Control Center</p>
         </div>
         <form onSubmit={e => { e.preventDefault(); if (!onLogin(u, p)) setErr(true); }} className="space-y-4">
-          <input required type="text" placeholder="账号" className="w-full px-4 py-3 rounded-xl border" value={u} onChange={e => setU(e.target.value)} />
-          <input required type="password" placeholder="密码" className="w-full px-4 py-3 rounded-xl border" value={p} onChange={e => setP(e.target.value)} />
-          {err && <p className="text-rose-500 text-sm text-center font-bold animate-shake">账号或密码错误</p>}
-          <button type="submit" className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold">进入后台</button>
+          <input required type="text" placeholder="账号" className="w-full px-5 py-4 rounded-2xl border bg-slate-50 focus:border-orange-500 outline-none" value={u} onChange={e => setU(e.target.value)} />
+          <input required type="password" placeholder="密码" className="w-full px-5 py-4 rounded-2xl border bg-slate-50 focus:border-orange-500 outline-none" value={p} onChange={e => setP(e.target.value)} />
+          {err && <p className="text-rose-500 text-sm text-center font-black animate-shake">验证未通过</p>}
+          <button type="submit" className="w-full bg-orange-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all">进入后台</button>
         </form>
       </div>
     </div>

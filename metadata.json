@@ -1,6 +1,8 @@
 
 {
-  "name": "QuickStore AI - Simple E-commerce Manager",
-  "description": "A streamlined product management and lead generation platform where users can list products, set prices and attributes, and collect customer contact details through an integrated ordering system.",
-  "requestFramePermissions": []
+  "name": "全球花炮集合 - 专业烟花订购平台",
+  "description": "提供全球各地优质烟花、爆竹产品的展示与订购服务。管理员可实时上架新品，采集客户预订信息，助力烟花生意高效运转。",
+  "requestFramePermissions": [
+    "camera"
+  ]
 }
