@@ -4,7 +4,8 @@ export interface Product {
   name: string;
   price: number;
   description: string;
-  image: string;
+  images: string[]; // 2-4张图片
+  category: string; // 产品分类
   attributes: string[];
   createdAt: number;
 }
